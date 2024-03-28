@@ -11,7 +11,8 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    app = docker.build("shivapriya1726/docker-integration")
+                    // Build Docker image
+                    docker.build("shivapriya1726/docker-integration", "-f Dockerfile .")
                 }
             }
         }
@@ -19,9 +20,7 @@ pipeline {
         stage('Test image') {
             steps {
                 script {
-                    app.inside {
-                        echo "Tests passed"
-                    }
+                    echo "Tests passed"
                 }
             }
         }
@@ -29,6 +28,7 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
+                    // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
@@ -38,4 +38,3 @@ pipeline {
             }
         }
     }
-}

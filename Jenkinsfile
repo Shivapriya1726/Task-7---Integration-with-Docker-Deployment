@@ -30,11 +30,12 @@ pipeline {
                 script {
                     // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                        docker.image("shivapriya1726/docker-integration").push("${env.BUILD_NUMBER}")
+                        docker.image("shivapriya1726/docker-integration").push("latest")
                     }
                 }
                 echo "Successfully pushed Docker image to Docker Hub"
             }
         }
     }
+}

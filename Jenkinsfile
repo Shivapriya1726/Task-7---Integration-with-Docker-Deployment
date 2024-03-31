@@ -2,39 +2,26 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone repository') {
+        stage('Build') {
             steps {
-                checkout scm
-            }
-        }
-
-        stage('Build image') {
-            steps {
-                script {
-                    // Build Docker image
-                    docker.build("shivapriya1726/docker-integration", "-f Dockerfile .")
+                
                 }
             }
         }
 
-        stage('Test image') {
+        stage('Test') {
             steps {
-                script {
-                    echo "Tests passed"
-                }
+                sh 'python app.py'
             }
         }
 
-        stage('Push image') {
+        stage('Deploy') {
             steps {
                 script {
-                    // Push Docker image to Docker Hub
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-                        docker.image("shivapriya1726/docker-integration").push("${env.BUILD_NUMBER}")
-                        docker.image("shivapriya1726/docker-integration").push("latest")
+                    docker.image('python:3.9').inside {
+                        sh 'python app.py'
                     }
                 }
-                echo "Successfully pushed Docker image to Docker Hub"
             }
         }
     }
